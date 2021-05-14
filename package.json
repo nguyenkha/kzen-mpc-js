@@ -1,0 +1,18 @@
+{
+  "name": "kzen-mpc",
+  "version": "0.1.0",
+  "description": "",
+  "main": "lib/index.js",
+  "author": "Kha Do <kha.do@quoine.com>",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "neon-cli": "^0.8.0"
+  },
+  "scripts": {
+    "build": "neon build"
+  },
+  "devDependencies": {
+    "elliptic": "^6.5.4",
+    "tweetnacl": "^1.0.3"
+  }
+}
