@@ -9,7 +9,8 @@
     "neon-cli": "^0.8.0"
   },
   "scripts": {
-    "build": "neon build"
+    "build": "neon build",
+    "postinstall": "neon build -r"
   },
   "devDependencies": {
     "elliptic": "^6.5.4",
