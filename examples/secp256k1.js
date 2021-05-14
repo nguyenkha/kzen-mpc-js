@@ -18,7 +18,7 @@ const publicKey = ec.keyFromPublic(contexts[0].getPublicKey());
 console.log('Public key:', publicKey.validate().result);
 
 console.log('Signing...');
-const message = Buffer.from('Hello world');
+const message = createHash('SHA256').update(Buffer.from('Hello world')).digest();
 const signParties = [2, 5, 7, 3, 9];
 const signContexts = shares
   .filter((s) => signParties.includes(s.index))
@@ -35,4 +35,4 @@ const s = new Signature({
   s: signature.s,
   recoveryParam: signature.recid,
 });
-console.log('Verify signature:', publicKey.verify(createHash('SHA256').update(message).digest(), s));
+console.log('Verify signature:', publicKey.verify(message, s));

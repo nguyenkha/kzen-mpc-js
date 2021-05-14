@@ -3,8 +3,6 @@ use curv_kzen::elliptic::curves::secp256_k1;
 use curv::arithmetic::traits::Converter;
 use curv::elliptic::curves::ed25519;
 use curv::elliptic::curves::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
 use multi_party_ecdsa::protocols::multi_party_ecdsa::gg_2020::ErrorType;
 use multi_party_ecdsa::protocols::multi_party_ecdsa::gg_2020::orchestrate::*;
 use multi_party_ecdsa::protocols::multi_party_ecdsa::gg_2020::party_i::*;
@@ -159,7 +157,7 @@ export! {
         verify(&sig, &y, &message)
     }
 
-    fn hash_bytes_to_big_int(message: Vec<u8>) -> BigInt {
-        HSha256::create_hash(&[&BigInt::from_bytes(&message)])
+    fn to_big_int(message: Vec<u8>) -> BigInt {
+        BigInt::from_bytes(&message)
     }
 }
