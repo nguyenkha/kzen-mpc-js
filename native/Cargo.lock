@@ -724,7 +724,7 @@ dependencies = [
 [[package]]
 name = "multi-party-eddsa"
 version = "0.2.1"
-source = "git+https://github.com/nguyenkha/multi-party-eddsa#e7bc049517870824b82f65cd249b295fb568d9f0"
+source = "git+https://github.com/nguyenkha/multi-party-eddsa#4dd70a7f22cbeae14eaa94781e9a699aae3db6fb"
 dependencies = [
  "curv",
  "hex 0.3.2",
