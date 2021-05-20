@@ -157,6 +157,10 @@ export! {
         verify(&sig, &y, &message)
     }
 
+    fn secp256k1_mul(p: secp256_k1::GE, s: secp256_k1::FE) -> secp256_k1::GE {
+        p * s
+    }
+
     fn to_big_int(message: Vec<u8>) -> BigInt {
         BigInt::from_bytes(&message)
     }
