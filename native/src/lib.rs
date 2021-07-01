@@ -164,4 +164,8 @@ export! {
     fn to_big_int(message: Vec<u8>) -> BigInt {
         BigInt::from_bytes(&message)
     }
+
+    fn secp256k1_construct_private(vss_scheme: curv_kzen::cryptographic_primitives::secret_sharing::feldman_vss::VerifiableSS<secp256_k1::GE>, indices: Vec<usize>, xs: Vec<secp256_k1::FE>) -> secp256_k1::FE {
+        vss_scheme.reconstruct(&indices, &xs)
+    }
 }

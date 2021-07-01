@@ -3,6 +3,7 @@ const ec = new EC('secp256k1');
 const { createHash } = require('crypto');
 const Signature = require('elliptic/lib/elliptic/ec/signature');
 const Context = require('../lib/context');
+const bindings = require('../native/index.node');
 
 console.log('Generating...');
 const parties = [...Array(15).keys()].map(i => i + 1);
@@ -16,6 +17,14 @@ results = contexts.map(c => results.filter(r => r.index !== c.index).map(r => c.
 const shares = contexts.map(c => c.getShare());
 const publicKey = ec.keyFromPublic(contexts[0].getPublicKey());
 console.log('Public key:', publicKey.validate().result);
+console.log('Hex:', publicKey.getPublic(true, 'hex'));
+
+const constructIndices = [0, 1, 2, 3, 4];
+const constructShares = shares.filter((_, i) => constructIndices.includes(i));
+const vss = constructShares[0].vssSchemes[0];
+const xs = constructShares.map(s => s.sharedKey.x_i);
+const privateKey = ec.keyFromPrivate(bindings.secp256k1_construct_private(vss, constructIndices, xs));
+console.log('From private key:', privateKey.getPublic(true, 'hex'));
 
 console.log('Signing...');
 const message = createHash('SHA256').update(Buffer.from('Hello world')).digest();
