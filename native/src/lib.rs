@@ -105,6 +105,14 @@ export! {
         p * s
     }
 
+    fn ed25519_construct_private(vss_scheme: VerifiableSS<ed25519::GE>, indices: Vec<usize>, xs: Vec<ed25519::FE>) -> ed25519::FE {
+        vss_scheme.reconstruct(&indices, &xs)
+    }
+
+    fn ed25519_to_public_key(s: ed25519::FE) -> ed25519::GE {
+        ed25519::GE::generator() * s
+    }
+
     fn secp256k1_keygen_stage1(input: KeyGenStage1Input) -> KeyGenStage1Result {
         keygen_stage1(&input)
     }

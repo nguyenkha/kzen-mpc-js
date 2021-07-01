@@ -1,5 +1,6 @@
 const Context = require('../lib/context');
 const nacl = require('tweetnacl');
+const bindings = require('../native/index.node');
 
 console.log('Generating...');
 const parties = [...Array(15).keys()].map(i => i + 1);
@@ -11,6 +12,16 @@ results = contexts.map(c => results.filter(r => r.index !== c.index).map(r => c.
 results = contexts.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r));
 const shares = contexts.map(c => c.getShare());
 const publicKey = contexts[0].getPublicKey();
+console.log('Public key:', shares[0].sharedKey.y);
+
+const constructIndices = [0, 1, 2, 3, 4];
+const constructShares = shares.filter((_, i) => constructIndices.includes(i));
+const vss = constructShares[0].vssSchemes[0];
+const xs = constructShares.map(s => s.sharedKey.x_i);
+const privateKey = bindings.ed25519_construct_private(vss, constructIndices, xs);
+console.log('Private key:', privateKey);
+const publicKey2 = bindings.ed25519_to_public_key(privateKey);
+console.log('Public key from private key:', publicKey2);
 
 console.log('Signing...');
 const message = Buffer.from('Hello world');
@@ -24,14 +35,3 @@ results = signContexts.map(c => results.filter(r => r.index !== c.index).map(r =
 results = signContexts.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r))
 const signature = signContexts[0].getSignature();
 console.log('Verified signature:', nacl.sign.detached.verify(message, signature, publicKey));
-
-const signParties2 = [10, 11, 12, 13, 14, 15];
-const signContexts2 = shares
-  .filter((s) => signParties2.includes(s.index))
-  .map(s => Context.createSignEd25519(s, signParties2, message));
-results = signContexts2.map(c => c.process());
-results = signContexts2.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r));
-results = signContexts2.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r));
-results = signContexts2.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r))
-const signature2 = signContexts2[0].getSignature();
-console.log('Verified signature:', nacl.sign.detached.verify(message, signature2, publicKey));
