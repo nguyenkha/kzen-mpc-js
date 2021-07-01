@@ -13,7 +13,6 @@
     "postinstall": "neon build -r"
   },
   "devDependencies": {
-    "elliptic": "^6.5.4",
-    "tweetnacl": "^1.0.3"
+    "elliptic": "^6.5.4"
   }
 }

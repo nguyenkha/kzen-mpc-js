@@ -1,5 +1,4 @@
 const Context = require('../lib/context');
-const nacl = require('tweetnacl');
 const EdDSA = require('elliptic').eddsa;
 const ed25519 = new EdDSA('ed25519');
 const KeyPair = require('elliptic/lib/elliptic/eddsa/key');
@@ -38,6 +37,7 @@ results = contexts.map(c => results.filter(r => r.index !== c.index).map(r => c.
 results = contexts.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r));
 const shares = contexts.map(c => c.getShare());
 const publicKey = contexts[0].getPublicKey();
+const keyPair = ed25519.keyFromPublic(publicKey.toString('hex'));
 console.log('Public key:', shares[0].sharedKey.y);
 
 const constructIndices = [0, 1, 2, 3, 4];
@@ -61,9 +61,9 @@ results = signContexts.map(c => results.filter(r => r.index !== c.index).map(r =
 results = signContexts.map(c => results.filter(r => r.index !== c.index).map(r => c.process(r)).find(r => r))
 const signature = signContexts[0].getSignature();
 console.log('Signature:', signature.toString('hex'));
-console.log('Verified signature:', nacl.sign.detached.verify(message, signature, publicKey));
+console.log('Verified signature:', keyPair.verify(message, signature.toString('hex')));
 
 // Reverse to LE
-const keyPair = new StubKeyPair(Buffer.from(privateScalar.padStart(64, 0), 'hex').reverse());
-const signature2 = Buffer.from(keyPair.sign(message).toBytes());
-console.log('Verified signature from private key:', nacl.sign.detached.verify(message, signature2, publicKey));
+const keyPair2 = new StubKeyPair(Buffer.from(privateScalar.padStart(64, 0), 'hex').reverse());
+const signature2 = Buffer.from(keyPair2.sign(message).toBytes());
+console.log('Verified signature from private key:', keyPair.verify(message, signature2.toString('hex')));
